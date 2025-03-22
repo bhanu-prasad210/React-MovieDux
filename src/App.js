@@ -1,23 +1,71 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import "./styles.css"; // Importing the styles.css file
+import Header from "./components/Header"; // Importing the Header component
+import Footer from "./components/Footer";
+import MoviesGrid from "./components/Moviesgrid";
+import Watchlist from "./components/Watchlist";
+import { BrowserRouter as Router, Routes, Link, Route } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 function App() {
+  const [movies, setMovies] = useState([]);
+  const [watchlist, setWatchlist] = useState([]);
+
+  useEffect(() => {
+    fetch("movies.json")
+      .then((response) => response.json())
+      .then((data) => setMovies(data));
+  }, []);
+
+  const toggleWatchlist = (movieId) => {
+    setWatchlist((prev) =>
+      prev.includes(movieId)
+        ? prev.filter((id) => id !== movieId)
+        : [...prev, movieId]
+    );
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <div className="container">
+        <Header></Header>
+        <Router>
+          <nav>
+            <ul>
+              <li>
+                <Link to="/">Home</Link>
+              </li>
+              <li>
+                <Link to="/watchlist">Watchlist</Link>
+              </li>
+            </ul>
+          </nav>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <MoviesGrid
+                  movies={movies}
+                  watchlist={watchlist}
+                  toggleWatchlist={toggleWatchlist}
+                />
+              }
+            />
+            <Route
+              path="/watchlist"
+              element={
+                <Watchlist
+                  movies={movies}
+                  watchlist={watchlist}
+                  toggleWatchlist={toggleWatchlist}
+                />
+              }
+            />
+          </Routes>
+        </Router>
+      </div>
+      <Footer></Footer>
     </div>
   );
 }

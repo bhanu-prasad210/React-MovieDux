@@ -13,7 +13,7 @@ function App() {
   const [watchlist, setWatchlist] = useState([]);
 
   useEffect(() => {
-    fetch("movies.json")
+    fetch("http://aaaed5c92378c40229facbe84a36cf1b-1510458704.us-east-1.elb.amazonaws.com/movies")
       .then((response) => response.json())
       .then((data) => setMovies(data));
   }, []);

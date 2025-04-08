@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: react-movie-dux
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: react-movie-dux
+  template:
+    metadata:
+      labels:
+        app: react-movie-dux
+    spec:
+      containers:
+        - name: react-ui
+          image: bhanuppp/react-movie-dux:latest
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: react-movie-dux-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: react-movie-dux
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
